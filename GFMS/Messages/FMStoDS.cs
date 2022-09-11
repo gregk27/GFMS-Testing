@@ -9,25 +9,13 @@
         private byte _controlByte;
         public bool EStopped
         {
-            get => (_controlByte & 0b10000000) != 0;
-            set
-            {
-                if (value)
-                    _controlByte |= 0b10000000;
-                else
-                    _controlByte &= 0b01111111;
-            }
+            get => CheckBit(_controlByte, 7);
+            set => SetBit(ref _controlByte, 7, value);
         }
         public bool Enabled
         {
-            get => (_controlByte & 0b00000100) != 0;
-            set
-            {
-                if (value)
-                    _controlByte |= 0b00000100;
-                else
-                    _controlByte &= 0b11111011;
-            }
+            get => CheckBit(_controlByte, 2);
+            set => SetBit(ref _controlByte, 2, value);
         }
         public Mode Mode
         {
@@ -113,6 +101,42 @@
             WriteNumber(RemainingTime, ref data, ref idx);
 
             return (data, idx);
+        }
+
+        protected override void FromByteArray(byte[] data)
+        {
+            int idx = 0;
+
+            // Sequence Num
+            SequenceNum = ReadShort(data, ref idx);
+            // Comm Version
+            _ = data[idx++];
+            // Control byte
+            _controlByte = data[idx++];
+            // Request
+            _ = data[idx++];
+
+            // Alliance station
+            _stationInfo = data[idx++];
+            // Tournament Level (Test)
+            Level = (TournamentLevel)data[idx++];
+            // Match
+            MatchNum = data[idx++];
+            // Play/Replay
+            ReplayCount = data[idx++];
+
+            // Date
+            var millisecond = ReadInt(data, ref idx);
+            var second = data[idx++];
+            var minute = data[idx++];
+            var hour = data[idx++];
+            var day = data[idx++];
+            var month = data[idx++];
+            var year = data[idx++];
+            Timestamp = new DateTime(year, month, day, hour, minute, second, (int)millisecond);
+
+            // Remaining time in mode
+            RemainingTime = ReadShort(data, ref idx);
         }
     }
 }
