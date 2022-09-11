@@ -61,17 +61,17 @@
             int idx = 0;
 
             // Sequence Num
-            WriteNumber(SequenceNum, ref data, ref idx);
+            WriteShort(SequenceNum, ref data, ref idx);
             // Comm Version
             data[idx++] = 0;
             // Control byte
             data[idx++] = _statusByte;
 
             // Team Number
-            WriteNumber(TeamNum, ref data, ref idx);
+            WriteShort(TeamNum, ref data, ref idx);
 
             // Battery
-            WriteNumber(BatteryVoltage, ref data, ref idx);
+            WriteShort(BatteryVoltage, ref data, ref idx);
 
             return (data, idx);
         }

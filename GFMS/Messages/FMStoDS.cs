@@ -69,7 +69,7 @@
             int idx = 0;
 
             // Sequence Num
-            WriteNumber(SequenceNum, ref data, ref idx);
+            WriteShort(SequenceNum, ref data, ref idx);
             // Comm Version
             data[idx++] = 0;
             // Control byte
@@ -89,7 +89,7 @@
             // Date
             Timestamp = DateTime.Now;
             uint miliseconds = (uint)((DateTimeOffset)Timestamp).ToUnixTimeSeconds();
-            WriteNumber(miliseconds, ref data, ref idx);
+            WriteInt(miliseconds, ref data, ref idx);
             data[idx++] = (byte)Timestamp.Second;
             data[idx++] = (byte)Timestamp.Minute;
             data[idx++] = (byte)Timestamp.Hour;
@@ -98,7 +98,7 @@
             data[idx++] = (byte)Timestamp.Year;
 
             // Remaining time in mode
-            WriteNumber(RemainingTime, ref data, ref idx);
+            WriteShort(RemainingTime, ref data, ref idx);
 
             return (data, idx);
         }

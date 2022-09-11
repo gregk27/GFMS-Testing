@@ -13,14 +13,13 @@ namespace GFMS.Messages
         public abstract (byte[], int) ToByteArray();
         protected abstract void FromByteArray(byte[] data);
 
-        protected static void WriteNumber(ushort num, ref byte[] arr, ref int idx)
+        protected static void WriteShort(ushort num, ref byte[] arr, ref int idx)
         {
             var bytes = BitConverter.GetBytes(num);
             arr[idx++] = bytes[0];
             arr[idx++] = bytes[1];
         }
-
-        protected static void WriteNumber(uint num, ref byte[] arr, ref int idx)
+        protected static void WriteInt(uint num, ref byte[] arr, ref int idx)
         {
             var bytes = BitConverter.GetBytes(num);
             arr[idx++] = bytes[0];
@@ -28,8 +27,7 @@ namespace GFMS.Messages
             arr[idx++] = bytes[2];
             arr[idx++] = bytes[3];
         }
-
-        protected static void WriteNumber(ulong num, ref byte[] arr, ref int idx)
+        protected static void WriteLong(ulong num, ref byte[] arr, ref int idx)
         {
             var bytes = BitConverter.GetBytes(num);
             arr[idx++] = bytes[0];
