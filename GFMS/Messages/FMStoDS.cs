@@ -88,14 +88,13 @@
 
             // Date
             Timestamp = DateTime.Now;
-            uint miliseconds = (uint)((DateTimeOffset)Timestamp).ToUnixTimeSeconds();
-            WriteInt(miliseconds, ref data, ref idx);
+            WriteInt(((uint)Timestamp.Millisecond)*1000, ref data, ref idx);
             data[idx++] = (byte)Timestamp.Second;
             data[idx++] = (byte)Timestamp.Minute;
             data[idx++] = (byte)Timestamp.Hour;
             data[idx++] = (byte)Timestamp.Day;
             data[idx++] = (byte)Timestamp.Month;
-            data[idx++] = (byte)Timestamp.Year;
+            data[idx++] = (byte)(Timestamp.Year-1900);
 
             // Remaining time in mode
             WriteShort(RemainingTime, ref data, ref idx);
@@ -126,14 +125,14 @@
             ReplayCount = data[idx++];
 
             // Date
-            var millisecond = ReadInt(data, ref idx);
+            var microsecond = ReadInt(data, ref idx);
             var second = data[idx++];
             var minute = data[idx++];
             var hour = data[idx++];
             var day = data[idx++];
             var month = data[idx++];
-            var year = data[idx++];
-            Timestamp = new DateTime(year, month, day, hour, minute, second, (int)millisecond);
+            var year = data[idx++]+1900;
+            Timestamp = new DateTime(year, month, day, hour, minute, second, (int)(microsecond/1000));
 
             // Remaining time in mode
             RemainingTime = ReadShort(data, ref idx);
