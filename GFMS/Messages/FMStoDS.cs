@@ -50,10 +50,17 @@
                     _stationInfo = (byte)(StationNum + 2);
             }
         }
+        public Station Station
+        {
+            get => new Station(Alliance, StationNum);
+            set 
+            {
+                StationNum = Station.Number;
+                Alliance = Station.Alliance;
+            }
+        }
 
-        public TournamentLevel Level;
-        public byte MatchNum;
-        public byte ReplayCount;
+        public Match Match;
 
         // Remaining time in mode
         public ushort RemainingTime;
@@ -80,11 +87,11 @@
             // Alliance station
             data[idx++] = _stationInfo;
             // Tournament Level (Test)
-            data[idx++] = (byte)Level;
+            data[idx++] = (byte)Match.Level;
             // Match
-            data[idx++] = MatchNum;
+            data[idx++] = Match.Number;
             // Play/Replay
-            data[idx++] = ReplayCount;
+            data[idx++] = Match.Replay;
 
             // Date
             Timestamp = DateTime.Now;
@@ -118,11 +125,12 @@
             // Alliance station
             _stationInfo = data[idx++];
             // Tournament Level (Test)
-            Level = (TournamentLevel)data[idx++];
+            var level = (TournamentLevel)data[idx++];
             // Match
-            MatchNum = data[idx++];
+            var matchNum = data[idx++];
             // Play/Replay
-            ReplayCount = data[idx++];
+            var replayCount = data[idx++];
+            Match = new Match(level, matchNum, replayCount);
 
             // Date
             var microsecond = ReadInt(data, ref idx);

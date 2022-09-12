@@ -14,23 +14,20 @@ namespace GFMS
 
         public readonly IPAddress IPAddress;
         public readonly ushort TeamNumber;
-        public readonly byte StationNumber;
-        public readonly Alliance Alliance;
+        public readonly Station Station;
 
         private UdpClient _sock;
         private CancellationTokenSource _sendingThread;
 
-        public ConnectedStation(DStoFMS init, IPAddress destination, Alliance alliance, byte stationNumber)        {
+        public ConnectedStation(DStoFMS init, IPAddress destination, Station station)        {
             LastRecv = init;
             IPAddress = destination;
             TeamNumber = init.TeamNum;
-            Alliance = alliance;
-            StationNumber = stationNumber;
+            Station = station;
 
             // Initialize state information
             _lastSent = new FMStoDS();
-            _lastSent.StationNum = stationNumber;
-            _lastSent.Alliance = alliance;
+            _lastSent.Station = station;
             _lastSent.Mode = DEFAULT_MODE;
 
             // Establish UDP connection
@@ -89,11 +86,9 @@ namespace GFMS
             }
         }
 
-        public void SetMatchData(TournamentLevel level, byte matchNum, byte replayNum)
+        public void SetMatchData(Match match)
         {
-            _lastSent.Level = level;
-            _lastSent.MatchNum = matchNum;
-            _lastSent.ReplayCount = replayNum;
+            _lastSent.Match = match;
         }
 
         public void SetEnabled(bool enabled)
