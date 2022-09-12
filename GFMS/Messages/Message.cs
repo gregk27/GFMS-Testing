@@ -73,7 +73,7 @@ namespace GFMS.Messages
             if (val)
                 subject |= (byte)(0b1 << bit);
             else
-                subject &= (byte)(0b0 << bit);
+                subject &= (byte)~(0b1 << bit);
         }
 
         /// <summary>
