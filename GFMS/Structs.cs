@@ -11,6 +11,8 @@
             Number = stationNum;
         }
 
+        public override string ToString() => $"{Alliance} {Number}";
+
         // Predefined standard stations
         public static Station RED_1 => new(Alliance.RED, 1);
         public static Station RED_2 => new(Alliance.RED, 2);
@@ -31,6 +33,14 @@
             Level = level;
             Number = number;
             Replay = replay;
+        }
+
+        public override string ToString()
+        {
+            if (Replay == 0)
+                return $"{Level} {Number}";
+            else
+                return $"{Level} {Number} Replay {Replay}";
         }
     }
 }
