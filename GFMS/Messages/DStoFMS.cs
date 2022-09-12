@@ -45,12 +45,14 @@
         /// <summary>
         /// Raw byte representation of battery voltage
         /// Per docs actual voltage is calculated from byte XXYY as XX + YY/256
+        /// 
+        /// Rounded to 2 decimal places as that's limit of the accuracy supported by the format (+/- 0.004)
         /// </summary>
         private ushort _voltageRaw;
-        public ushort BatteryVoltage
+        public double BatteryVoltage
         {
-            get => (ushort)((_voltageRaw >> 8) + (_voltageRaw & 0b1111) / 256.0);
-            set => _voltageRaw = (ushort)(((byte)(value / 256) << 8) | (byte)(value % 256));
+            get => Math.Round((_voltageRaw >> 8) + (_voltageRaw & 0xFF) / 256.0, 2);
+            set => _voltageRaw = (ushort)(((byte)value << 8) | (byte)((value % 1) * 256));
         }
 
         public ushort TeamNum;
@@ -71,7 +73,7 @@
             WriteShort(TeamNum, ref data, ref idx);
 
             // Battery
-            WriteShort(BatteryVoltage, ref data, ref idx);
+            WriteShort(_voltageRaw, ref data, ref idx);
 
             return (data, idx);
         }
