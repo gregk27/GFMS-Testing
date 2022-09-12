@@ -71,6 +71,12 @@ namespace GFMS
             _sock.Send(data, length);
         }
 
+        public void UpdateRecv(DStoFMS message)
+        {
+            if (message.SequenceNum > LastRecv.SequenceNum)
+                LastRecv = message;
+        }
+
         /// <summary>
         /// Periodic update function to be called during match play
         /// Sets mode and remaining time
