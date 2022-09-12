@@ -27,39 +27,43 @@ namespace GFMS
         public void Setup()
         {
             byte[] data = new byte[1024];
-            UdpClient newsock = new UdpClient(new IPEndPoint(IPAddress.Any, 1160));
+            UdpClient sock = new UdpClient(new IPEndPoint(IPAddress.Any, 1160));
 
             IPEndPoint sender = new IPEndPoint(IPAddress.Any, 0);
 
             Task.Run(() =>
             {
-                data = newsock.Receive(ref sender);
-                try
+                while (true)
                 {
-                    var message = Message.FromBytes<DStoFMS>(data);
-                    // If the sender is known, update last recevied message
-                    if (Stations.ContainsKey(sender.Address))
+                    data = sock.Receive(ref sender);
+                    try
                     {
-                        lock (Stations)
+                        var message = Message.FromBytes<DStoFMS>(data);
+                        // If the sender is known, update last recevied message
+                        if (Stations.ContainsKey(sender.Address))
                         {
-                            Stations[sender.Address].UpdateRecv(message);
+                            lock (Stations)
+                            {
+                                Stations[sender.Address].UpdateRecv(message);
+                            }
+                        }
+                        // If the sender is unkown but robot number is expected, add the new station
+                        else if (StationMappings.ContainsKey(message.TeamNum))
+                        {
+                            Console.WriteLine($"Connecting team {message.TeamNum}@{sender.Address} to station {StationMappings[message.TeamNum]}");
+                            var cs = new ConnectedStation(message, sender.Address, StationMappings[message.TeamNum]);
+                            cs.SetMatchData(CurrentMatch);
+                            cs.MatchPeriodic(Mode.AUTO, 20);
+                            lock (Stations)
+                            {
+                                Stations.Add(sender.Address, cs);
+                            }
                         }
                     }
-                    // If the sender is unkown but robot number is expected, add the new station
-                    else if (StationMappings.ContainsKey(message.TeamNum))
+                    catch
                     {
-                        var cs = new ConnectedStation(message, sender.Address, StationMappings[message.TeamNum]);
-                        cs.SetMatchData(CurrentMatch);
-                        cs.MatchPeriodic(Mode.AUTO, 20);
-                        lock (Stations)
-                        {
-                            Stations.Add(sender.Address, cs);
-                        }
+                        Console.WriteLine($"Message {data} from ${sender} could not be processed");
                     }
-                }
-                catch
-                {
-                    Console.WriteLine($"Message {data} from ${sender} could not be processed");
                 }
             });
         }

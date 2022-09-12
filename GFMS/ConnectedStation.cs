@@ -38,13 +38,16 @@ namespace GFMS
 
             Task.Run(async () =>
             {
-                // Check for cancellation
-                if (_sendingThread.IsCancellationRequested)
-                    return;
-                // Send message
-                SendMessage();
-                // Wait between messages (should be ~500ms between messages)
-                await Task.Delay(450);
+                while (true)
+                {
+                    // Check for cancellation
+                    if (_sendingThread.IsCancellationRequested)
+                        break;
+                    // Send message
+                    SendMessage();
+                    // Wait between messages (should be ~500ms between messages)
+                    await Task.Delay(450);
+                }
             }, _sendingThread.Token);
         }
 
