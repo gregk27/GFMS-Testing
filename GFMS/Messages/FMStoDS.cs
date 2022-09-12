@@ -106,6 +106,9 @@
             // Remaining time in mode
             WriteShort(RemainingTime, ref data, ref idx);
 
+            // Bosst message length to satisfy QDriverStation
+            idx += 5;
+
             return (data, idx);
         }
 
