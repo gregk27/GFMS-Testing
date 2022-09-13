@@ -44,7 +44,7 @@ namespace GFMS
                         {
                             lock (Stations)
                             {
-                                Stations[sender.Address].UpdateRecv(message);
+                                Stations[sender.Address].RecvMessage(message);
                             }
                         }
                         // If the sender is unkown but robot number is expected, add the new station

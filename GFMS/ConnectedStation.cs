@@ -74,7 +74,7 @@ namespace GFMS
             _sock.Send(data, length);
         }
 
-        public void UpdateRecv(DStoFMS message)
+        public void RecvMessage(DStoFMS message)
         {
             if (message.SequenceNum > LastRecv.SequenceNum)
                 LastRecv = message;
