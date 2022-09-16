@@ -7,7 +7,7 @@ namespace GFMS
     public class ConnectedStation : IDisposable
     {
         private const Mode DEFAULT_MODE = Mode.TELE;
-        private const int DS_PORT = 1120;
+        private const int DS_PORT = 1121;
 
         public DStoFMS LastRecv { get; private set; }
         private FMStoDS _lastSent;
