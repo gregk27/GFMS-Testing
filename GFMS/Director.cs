@@ -91,29 +91,43 @@ namespace GFMS
                 {
                     // Perform a blocking call to accept requests.
                     TcpClient client = server.AcceptTcpClient();
+                    var ipep = client.Client.RemoteEndPoint as IPEndPoint;
                     Console.WriteLine("TCP Connected!");
+                    var bytes = new byte[16];
 
-                    Task.Run(() =>
+                    NetworkStream stream = client.GetStream();
+
+                    stream.Read(bytes, 0, bytes.Length);
+                    Console.WriteLine(string.Join(",",bytes));
+                    try
                     {
-                        byte[] bytes = new byte[256];
-
+                        TagMessage msg = TagMessage.FromBytes(bytes);
+                        if(msg is TeamNumberMessage tmsg)
                         // Get a stream object for reading and writing
                         NetworkStream stream = client.GetStream();
 
                         while (true)
                         {
-                            string? data = null;
-
-                            int i;
-                            // Loop to receive all the data sent by the client.
-                            while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
+                            Console.WriteLine($"Incoming connection from team {tmsg.TeamNumber}");
+                            if (StationMappings.ContainsKey(tmsg.TeamNumber))
                             {
-                                // Translate data bytes to a ASCII string.
+                                if (Stations.ContainsKey(ipep.Address))
+                                    Console.WriteLine($"Re-Connection from {tmsg.TeamNumber}");
+                                else
+                                    Console.WriteLine($"Connection from {tmsg.TeamNumber}, in {StationMappings[tmsg.TeamNumber]}");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Unexpected connection from {tmsg.TeamNumber}");
                                 data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
                                 Console.WriteLine("Received: {0}", data);
                             }
                         }
-                    });
+                    }
+                    catch(Exception e)
+                    {
+                        Console.WriteLine($"Init TCP message from {ipep?.Address} could not be read. Message: {string.Join(",", bytes)}");
+                    }
                 }
             });
 
