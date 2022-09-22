@@ -3,8 +3,28 @@
     public class TagMessage : Message
     {
 
-        public byte ID;
+        public virtual TagTypes Type { get; protected set; }
         public byte[] Payload { get; set; }
+
+        /// <summary>
+        /// Constructor for Message.FromBytes, should not be used otherwise as Type cannot be set elsewhere
+        /// </summary>
+        public TagMessage() { }
+
+        public TagMessage(TagTypes type, byte[] payload) 
+        {
+            Type = type;
+            Payload = payload;
+        }
+
+        /// <summary>
+        /// Copy-constructor used by derived classes
+        /// </summary>
+        protected TagMessage(TagMessage tm)
+        {
+            Type = tm.Type;
+            Payload = tm.Payload;
+        }
 
         public override (byte[], int) ToByteArray()
         {
@@ -13,7 +33,7 @@
             
             // Set length header
             WriteShort((ushort)(Payload.Length + 1), ref data, ref idx);
-            data[idx++] = ID;
+            data[idx++] = (byte)Type;
             Payload.CopyTo(data, idx);
             return (data, data.Length);
         }
@@ -21,11 +41,27 @@
         protected override void FromByteArray(byte[] data)
         {
             int idx = 0;
-            ushort size = ReadShort(data, ref idx);
-            ID = data[idx++];
+            ushort size = (ushort)(ReadShort(data, ref idx) + 2);
+            Type = (TagTypes)data[idx++];
             Payload = data[idx..size];
         }
 
+        /// <summary>
+        /// Improved byte array processing that creates derived class if appropriate
+        /// </summary>
+        public static TagMessage FromBytes(byte[] data)
+        {
+            TagMessage msg = new TagMessage();
+            msg.FromByteArray(data);
+
+            switch (msg.Type)
+            {
+                case TagTypes.TEAM_NUMBER:
+                    return new TeamNumberMessage(msg);
+                default:
+                    return msg;
+            }
+        }
     }
 
     public enum TagTypes
@@ -49,5 +85,35 @@
         CHALLENGE_RESPONSE = 0x1B,
         GAME_DATA = 0x1C,
         DS_PING = 0x1D,
+    }
+
+    public class TeamNumberMessage : TagMessage
+    {
+        public ushort TeamNumber 
+        { 
+            get {
+                int idx = 0;
+                return ReadShort(Payload, ref idx);
+            }
+            set
+            {
+                byte[] tmp = Payload;
+                int idx = 0;
+                WriteShort(value, ref tmp, ref idx);
+                Payload = tmp;
+            } 
+        }
+
+        public TeamNumberMessage() : base(TagTypes.TEAM_NUMBER, new byte[2]) 
+        { 
+            
+        }
+
+        public TeamNumberMessage(TagMessage tm) : base(tm)
+        {
+            if (Type != TagTypes.TEAM_NUMBER)
+                throw new Exception("Invalid tag type");
+
+        }
     }
 }
