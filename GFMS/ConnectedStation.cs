@@ -16,13 +16,15 @@ namespace GFMS
         public readonly ushort TeamNumber;
         public readonly Station Station;
 
+        private TcpClient _tcpClient;
+        private NetworkStream _tcpStream;
         private UdpClient _sock;
         private CancellationTokenSource _sendingThread;
 
-        public ConnectedStation(DStoFMS init, IPAddress destination, Station station)        {
-            LastRecv = init;
+        public ConnectedStation(ushort teamNumber, Station station, TcpClient client, IPAddress destination)
+        {
             IPAddress = destination;
-            TeamNumber = init.TeamNum;
+            TeamNumber = teamNumber;
             Station = station;
 
             // Initialize state information
@@ -30,12 +32,17 @@ namespace GFMS
             _lastSent.Station = station;
             _lastSent.Mode = DEFAULT_MODE;
 
+            // Copy over TCP information
+            _tcpClient = client;
+            _tcpStream = client.GetStream();
+
             // Establish UDP connection
             _sock = new();
             _sock.Connect(new IPEndPoint(IPAddress, DS_PORT));
 
             _sendingThread = new();
 
+            // UDP heartbeat task
             Task.Run(async () =>
             {
                 while (true)
@@ -49,6 +56,25 @@ namespace GFMS
                     await Task.Delay(450);
                 }
             }, _sendingThread.Token);
+
+            // Incoming TCP task
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    // Check for cancellation
+                    if (_sendingThread.IsCancellationRequested)
+                        break;
+                    // TODO: Implement processing for incoming TCP messages
+                }
+            }, _sendingThread.Token);
+
+            // Immediately send drive station info message
+            StationInfoMessage smsg = new();
+            smsg.Station = station;
+            smsg.Status = StationInfoMessage.StatusTypes.GOOD;
+            var (data, len) = smsg.ToByteArray();
+            _tcpStream.Write(data, 0, len);
         }
 
         ~ConnectedStation()
@@ -76,7 +102,7 @@ namespace GFMS
 
         public void RecvMessage(DStoFMS message)
         {
-            if (message.SequenceNum > LastRecv.SequenceNum)
+            if (LastRecv == null || message.SequenceNum > LastRecv.SequenceNum)
                 LastRecv = message;
         }
 

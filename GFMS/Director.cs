@@ -48,18 +48,6 @@ namespace GFMS
                                 Stations[sender.Address].RecvMessage(message);
                             }
                         }
-                        // If the sender is unkown but robot number is expected, add the new station
-                        else if (StationMappings.ContainsKey(message.TeamNum))
-                        {
-                            Console.WriteLine($"Connecting team {message.TeamNum}@{sender.Address} to station {StationMappings[message.TeamNum]}");
-                            var cs = new ConnectedStation(message, sender.Address, StationMappings[message.TeamNum]);
-                            cs.SetMatchData(CurrentMatch);
-                            cs.MatchPeriodic(Mode.AUTO, 20);
-                            lock (Stations)
-                            {
-                                Stations.Add(sender.Address, cs);
-                            }
-                        }
                         else
                         {
                             Console.WriteLine($"Incoming message from {sender} dropped");
@@ -91,7 +79,10 @@ namespace GFMS
                 {
                     // Perform a blocking call to accept requests.
                     TcpClient client = server.AcceptTcpClient();
+                    
                     var ipep = client.Client.RemoteEndPoint as IPEndPoint;
+                    if (ipep == null) continue;
+
                     Console.WriteLine("TCP Connected!");
                     var bytes = new byte[16];
 
@@ -101,12 +92,9 @@ namespace GFMS
                     Console.WriteLine(string.Join(",",bytes));
                     try
                     {
+                        // First incoming message should be the driver station's team number
                         TagMessage msg = TagMessage.FromBytes(bytes);
                         if(msg is TeamNumberMessage tmsg)
-                        // Get a stream object for reading and writing
-                        NetworkStream stream = client.GetStream();
-
-                        while (true)
                         {
                             Console.WriteLine($"Incoming connection from team {tmsg.TeamNumber}");
                             if (StationMappings.ContainsKey(tmsg.TeamNumber))
@@ -114,13 +102,19 @@ namespace GFMS
                                 if (Stations.ContainsKey(ipep.Address))
                                     Console.WriteLine($"Re-Connection from {tmsg.TeamNumber}");
                                 else
-                                    Console.WriteLine($"Connection from {tmsg.TeamNumber}, in {StationMappings[tmsg.TeamNumber]}");
+                                    Console.WriteLine($"Connecting team {tmsg.TeamNumber}@{ipep.Address} to station {StationMappings[tmsg.TeamNumber]}");
+
+                                var cs = new ConnectedStation(tmsg.TeamNumber, StationMappings[tmsg.TeamNumber], client, ipep.Address);
+                                cs.SetMatchData(CurrentMatch);
+                                cs.MatchPeriodic(Mode.AUTO, 20);
+                                lock (Stations)
+                                {
+                                    Stations.Add(ipep.Address, cs);
+                                }
                             }
                             else
                             {
                                 Console.WriteLine($"Unexpected connection from {tmsg.TeamNumber}");
-                                data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
-                                Console.WriteLine("Received: {0}", data);
                             }
                         }
                     }
@@ -128,30 +122,6 @@ namespace GFMS
                     {
                         Console.WriteLine($"Init TCP message from {ipep?.Address} could not be read. Message: {string.Join(",", bytes)}");
                     }
-                }
-            });
-
-            // Broadcast to trigger DS connection
-            Task.Run(() =>
-            {
-                byte[] data = new byte[64];
-                UdpClient newsock = new();
-
-                byte[] addr = new byte[] { 10, 100, 0, 0 };
-                IPEndPoint reciever = new(new IPAddress(addr), 1121);
-
-                while (true)
-                {
-                    // Loop over posssible IP addresses
-                    addr[3]++;
-                    reciever.Address = new IPAddress(addr);
-                    // Don't send broadcast request to currently connected stations
-                    if (Stations.ContainsKey(reciever.Address))
-                        continue;
-                    // Send empty message to trigger response
-                    newsock.Client.SendTo(data, reciever);
-                    // Slight delay between messages to reduce load
-                    Thread.Sleep(50);
                 }
             });
         }
