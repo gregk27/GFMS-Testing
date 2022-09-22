@@ -72,6 +72,50 @@ namespace GFMS
                 }
             });
 
+            // TCP socket for tag comms
+            Task.Run(() =>
+            {
+                TcpListener server = null;
+
+                // Set the TcpListener on port 13000.
+                Int32 port = 1750;
+                IPAddress localAddr = new(new byte[] { 10, 0, 100, 5 });
+
+                // TcpListener server = new TcpListener(port);
+                server = new TcpListener(IPAddress.Any, port);
+
+                // Start listening for client requests.
+                server.Start();
+
+                while (true)
+                {
+                    // Perform a blocking call to accept requests.
+                    TcpClient client = server.AcceptTcpClient();
+                    Console.WriteLine("TCP Connected!");
+
+                    Task.Run(() =>
+                    {
+                        byte[] bytes = new byte[256];
+
+                        // Get a stream object for reading and writing
+                        NetworkStream stream = client.GetStream();
+
+                        while (true)
+                        {
+                            string? data = null;
+
+                            int i;
+                            // Loop to receive all the data sent by the client.
+                            while ((i = stream.Read(bytes, 0, bytes.Length)) != 0)
+                            {
+                                // Translate data bytes to a ASCII string.
+                                data = System.Text.Encoding.ASCII.GetString(bytes, 0, i);
+                                Console.WriteLine("Received: {0}", data);
+                            }
+                        }
+                    });
+                }
+            });
 
             // Broadcast to trigger DS connection
             Task.Run(() =>
@@ -93,7 +137,7 @@ namespace GFMS
                     // Send empty message to trigger response
                     newsock.Client.SendTo(data, reciever);
                     // Slight delay between messages to reduce load
-                    Thread.Sleep(100);
+                    Thread.Sleep(50);
                 }
             });
         }
