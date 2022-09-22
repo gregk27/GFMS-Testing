@@ -55,8 +55,8 @@
             get => new Station(Alliance, StationNum);
             set 
             {
-                StationNum = Station.Number;
-                Alliance = Station.Alliance;
+                StationNum = value.Number;
+                Alliance = value.Alliance;
             }
         }
 
