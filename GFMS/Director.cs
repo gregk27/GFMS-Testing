@@ -16,6 +16,7 @@ namespace GFMS
         // Dummy main function to invoke director
         public static void Main()
         {
+            Console.WriteLine("Hello World");
             new Director().Setup();
             while (true) ;
         }
@@ -164,6 +165,16 @@ namespace GFMS
                             {
                                 Stations.Add(ipep.Address, cs);
                             }
+                            // Register disconnect callback
+                            cs.OnDisconnect += (object? src, EventArgs e) =>
+                            {
+                                Console.WriteLine($"Team {cs.TeamNumber} disconnected unexpectedly");
+                                cs.Dispose();
+                                lock (Stations)
+                                {
+                                    Stations.Remove(ipep.Address);
+                                }
+                            };
                         }
                         else
                         {

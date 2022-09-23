@@ -8,11 +8,16 @@ namespace GFMS
     public partial class ConnectedStation : IDisposable
     {
         private const int DS_PORT = 1121;
+        private const int INCOMING_TIMEOUT = 1500;
 
         public DStoFMS LastRecv { get; private set; }
+        public bool IsAlive { get; private set; }
+        private long _lastRecvTime;
 
         private UdpClient _sock;
 
+
+        public event EventHandler OnDisconnect;
 
         /// <summary>
         /// Called by constructor to setup UDP communications
@@ -23,6 +28,9 @@ namespace GFMS
             _sock = new();
             _sock.Connect(new IPEndPoint(IPAddress, DS_PORT));
 
+            _lastRecvTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            IsAlive = true;
+
             // UDP heartbeat task
             Task.Run(async () =>
             {
@@ -31,8 +39,17 @@ namespace GFMS
                     // Check for cancellation
                     if (_threadCancellation.IsCancellationRequested)
                         break;
+
                     // Send message
                     SendMessage();
+                    
+                    // If no messages have arrived in the timeout period, then assume the connection is dead
+                    if(DateTimeOffset.Now.ToUnixTimeMilliseconds() - _lastRecvTime > INCOMING_TIMEOUT)
+                    {
+                        IsAlive = false;
+                        OnDisconnect.Invoke(this, EventArgs.Empty);
+                    }
+
                     // Wait between messages (should be ~500ms between messages)
                     await Task.Delay(450);
                 }
@@ -54,7 +71,10 @@ namespace GFMS
         public void RecvMessage(DStoFMS message)
         {
             if (LastRecv == null || message.SequenceNum > LastRecv.SequenceNum)
+            {
                 LastRecv = message;
+                _lastRecvTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            }
         }
 
     }
