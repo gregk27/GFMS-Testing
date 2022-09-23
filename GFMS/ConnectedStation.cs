@@ -49,6 +49,10 @@ namespace GFMS
             _threadCancellation.Cancel();
         }
 
+        //----------------------
+        // FMS state properties
+        //----------------------
+
         /// <summary>
         /// Periodic update function to be called during match play
         /// Sets mode and remaining time
@@ -88,5 +92,17 @@ namespace GFMS
                 SendMessage();
             }
         }
+
+
+        //------------------------
+        // DS reported properties
+        //------------------------
+        public bool HasComms => _lastRecv?.CommsActive ?? false;
+
+        public bool IsEnabled => _lastRecv?.Enabled ?? false;
+
+        public bool IsEstopped => _lastRecv?.EStopped ?? false;
+
+        public double BatteryVoltage => _lastRecv?.BatteryVoltage ?? 0;
     }
 }

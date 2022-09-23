@@ -10,7 +10,7 @@ namespace GFMS
         private const int DS_PORT = 1121;
         private const int INCOMING_TIMEOUT = 1500;
 
-        public DStoFMS LastRecv { get; private set; }
+        private DStoFMS? _lastRecv;
         public bool IsAlive { get; private set; }
         private long _lastRecvTime;
 
@@ -70,9 +70,9 @@ namespace GFMS
 
         public void RecvMessage(DStoFMS message)
         {
-            if (LastRecv == null || message.SequenceNum > LastRecv.SequenceNum)
+            if (_lastRecv == null || message.SequenceNum > _lastRecv.SequenceNum)
             {
-                LastRecv = message;
+                _lastRecv = message;
                 _lastRecvTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             }
         }
