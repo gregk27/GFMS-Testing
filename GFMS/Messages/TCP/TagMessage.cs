@@ -1,4 +1,4 @@
-﻿namespace GFMS.Messages
+﻿namespace GFMS.Messages.TCP
 {
     public class TagMessage : Message
     {
@@ -11,7 +11,7 @@
         /// </summary>
         public TagMessage() { }
 
-        public TagMessage(TagTypes type, byte[] payload) 
+        public TagMessage(TagTypes type, byte[] payload)
         {
             Type = type;
             Payload = payload;
@@ -30,7 +30,7 @@
         {
             int idx = 0;
             byte[] data = new byte[Payload.Length + 3];
-            
+
             // Set length header
             WriteShort((ushort)(Payload.Length + 1), ref data, ref idx);
             data[idx++] = (byte)Type;
@@ -74,7 +74,7 @@
         CANJAG_VERSION = 0x05,
         CANTALON_VERSION = 0x06,
         THIRD_PARTY_DEVICE_VERSION = 0x07,
-        
+
         EVENT_CODE = 0x14,
         USAGE_REPORT = 0x15,
         LOG_DATA = 0x16,
@@ -85,92 +85,5 @@
         CHALLENGE_RESPONSE = 0x1B,
         GAME_DATA = 0x1C,
         DS_PING = 0x1D,
-    }
-
-    public class TeamNumberMessage : TagMessage
-    {
-        public ushort TeamNumber 
-        { 
-            get {
-                int idx = 0;
-                return ReadShort(Payload, ref idx);
-            }
-            set
-            {
-                byte[] tmp = Payload;
-                int idx = 0;
-                WriteShort(value, ref tmp, ref idx);
-                Payload = tmp;
-            } 
-        }
-
-        public TeamNumberMessage() : base(TagTypes.TEAM_NUMBER, new byte[2]) 
-        { 
-            
-        }
-
-        public TeamNumberMessage(TagMessage tm) : base(tm)
-        {
-            if (Type != TagTypes.TEAM_NUMBER)
-                throw new Exception("Invalid tag type");
-
-        }
-    }
-
-    public class StationInfoMessage : TagMessage
-    {
-        // Taken from FMS to DS message
-        public byte StationNum
-        {
-            get => (byte)(Payload[0] % 3 + 1);
-            set
-            {
-                if (Alliance == Alliance.RED)
-                    Payload[0] = (byte)(value - 1);
-                else
-                    Payload[0] = (byte)(value + 2);
-            }
-        }
-        public Alliance Alliance
-        {
-            get => Payload[0] < 3 ? Alliance.RED : Alliance.BLUE;
-            set
-            {
-                if (value == Alliance.RED)
-                    Payload[0] = (byte)(StationNum - 1);
-                else
-                    Payload[0] = (byte)(StationNum + 2);
-            }
-        }
-        public Station Station
-        {
-            get => new Station(Alliance, StationNum);
-            set
-            {
-                StationNum = value.Number;
-                Alliance = value.Alliance;
-            }
-        }
-
-        public StatusTypes Status 
-        { 
-            get => (StatusTypes)Payload[1]; 
-            set => Payload[1] = (byte)value;
-        }
-
-        public StationInfoMessage() : base(TagTypes.STATION_INFO, new byte[2]) { }
-
-        public StationInfoMessage(TagMessage tm) : base(tm)
-        {
-            if (Type != TagTypes.STATION_INFO)
-                throw new Exception("Invalid tag type");
-        }
-
-        public enum StatusTypes
-        {
-            GOOD = 0,
-            BAD = 1,
-            WAITING = 2,
-        }
     }
 }

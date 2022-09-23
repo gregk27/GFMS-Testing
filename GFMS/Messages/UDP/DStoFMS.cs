@@ -1,4 +1,4 @@
-﻿namespace GFMS.Messages
+﻿namespace GFMS.Messages.UDP
 {
     public class DStoFMS : Message
     {
@@ -52,7 +52,7 @@
         public double BatteryVoltage
         {
             get => Math.Round((_voltageRaw >> 8) + (_voltageRaw & 0xFF) / 256.0, 2);
-            set => _voltageRaw = (ushort)(((byte)value << 8) | (byte)((value % 1) * 256));
+            set => _voltageRaw = (ushort)((byte)value << 8 | (byte)(value % 1 * 256));
         }
 
         public ushort TeamNum;
