@@ -1,4 +1,5 @@
-﻿using GFMS.Messages;
+﻿using GFMS.Messages.TCP;
+using GFMS.Messages.UDP;
 using System.Net;
 using System.Net.Sockets;
 
