@@ -1,4 +1,4 @@
-﻿namespace GFMS.Messages
+﻿namespace GFMS.Messages.TCP
 {
     public class TagMessage : Message
     {
@@ -11,7 +11,7 @@
         /// </summary>
         public TagMessage() { }
 
-        public TagMessage(TagTypes type, byte[] payload) 
+        public TagMessage(TagTypes type, byte[] payload)
         {
             Type = type;
             Payload = payload;
@@ -30,7 +30,7 @@
         {
             int idx = 0;
             byte[] data = new byte[Payload.Length + 3];
-            
+
             // Set length header
             WriteShort((ushort)(Payload.Length + 1), ref data, ref idx);
             data[idx++] = (byte)Type;
@@ -74,7 +74,7 @@
         CANJAG_VERSION = 0x05,
         CANTALON_VERSION = 0x06,
         THIRD_PARTY_DEVICE_VERSION = 0x07,
-        
+
         EVENT_CODE = 0x14,
         USAGE_REPORT = 0x15,
         LOG_DATA = 0x16,
@@ -89,9 +89,10 @@
 
     public class TeamNumberMessage : TagMessage
     {
-        public ushort TeamNumber 
-        { 
-            get {
+        public ushort TeamNumber
+        {
+            get
+            {
                 int idx = 0;
                 return ReadShort(Payload, ref idx);
             }
@@ -101,12 +102,12 @@
                 int idx = 0;
                 WriteShort(value, ref tmp, ref idx);
                 Payload = tmp;
-            } 
+            }
         }
 
-        public TeamNumberMessage() : base(TagTypes.TEAM_NUMBER, new byte[2]) 
-        { 
-            
+        public TeamNumberMessage() : base(TagTypes.TEAM_NUMBER, new byte[2])
+        {
+
         }
 
         public TeamNumberMessage(TagMessage tm) : base(tm)
@@ -152,9 +153,9 @@
             }
         }
 
-        public StatusTypes Status 
-        { 
-            get => (StatusTypes)Payload[1]; 
+        public StatusTypes Status
+        {
+            get => (StatusTypes)Payload[1];
             set => Payload[1] = (byte)value;
         }
 

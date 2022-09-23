@@ -1,4 +1,4 @@
-﻿namespace GFMS.Messages
+﻿namespace GFMS.Messages.UDP
 {
     public class FMStoDS : Message
     {
@@ -33,7 +33,8 @@
         public byte StationNum
         {
             get => (byte)(_stationInfo % 3 + 1);
-            set {
+            set
+            {
                 if (Alliance == Alliance.RED)
                     _stationInfo = (byte)(value - 1);
                 else
@@ -43,7 +44,8 @@
         public Alliance Alliance
         {
             get => _stationInfo < 3 ? Alliance.RED : Alliance.BLUE;
-            set {
+            set
+            {
                 if (value == Alliance.RED)
                     _stationInfo = (byte)(StationNum - 1);
                 else
@@ -53,7 +55,7 @@
         public Station Station
         {
             get => new Station(Alliance, StationNum);
-            set 
+            set
             {
                 StationNum = value.Number;
                 Alliance = value.Alliance;
@@ -95,13 +97,13 @@
 
             // Date
             Timestamp = DateTime.Now;
-            WriteInt(((uint)Timestamp.Millisecond)*1000, ref data, ref idx);
+            WriteInt((uint)Timestamp.Millisecond * 1000, ref data, ref idx);
             data[idx++] = (byte)Timestamp.Second;
             data[idx++] = (byte)Timestamp.Minute;
             data[idx++] = (byte)Timestamp.Hour;
             data[idx++] = (byte)Timestamp.Day;
             data[idx++] = (byte)Timestamp.Month;
-            data[idx++] = (byte)(Timestamp.Year-1900);
+            data[idx++] = (byte)(Timestamp.Year - 1900);
 
             // Remaining time in mode
             WriteShort(RemainingTime, ref data, ref idx);
@@ -142,8 +144,8 @@
             var hour = data[idx++];
             var day = data[idx++];
             var month = data[idx++];
-            var year = data[idx++]+1900;
-            Timestamp = new DateTime(year, month, day, hour, minute, second, (int)(microsecond/1000));
+            var year = data[idx++] + 1900;
+            Timestamp = new DateTime(year, month, day, hour, minute, second, (int)(microsecond / 1000));
 
             // Remaining time in mode
             RemainingTime = ReadShort(data, ref idx);
