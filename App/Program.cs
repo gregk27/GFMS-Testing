@@ -21,6 +21,7 @@ namespace App
             AllocConsole();
             Console.WriteLine("Hello World!");
             Director = new Director();
+            Director.Setup();
             Application.Run(new Form1());
             FreeConsole();
         }
