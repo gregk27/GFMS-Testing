@@ -105,6 +105,8 @@ namespace GFMS
 
         public bool IsEstopped => _lastRecv?.EStopped ?? false;
 
+        public Mode RobotMode => _lastRecv?.Mode ?? Mode.TEST;
+
         public double BatteryVoltage => _lastRecv?.BatteryVoltage ?? 0;
     }
 }

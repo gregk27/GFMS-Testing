@@ -11,6 +11,39 @@ namespace App
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            Program.Director.StationConnected += (object? src, ConnectedStation station) =>
+            {
+                if (station.TeamNumber.ToString() == TeamNumber.Text)
+                {
+                    StatusDSComms.Text = "Connected";
+                }
+            };
+
+            Program.Director.StationConnected += (object? src, ConnectedStation station) =>
+            {
+                if (station.TeamNumber.ToString() == TeamNumber.Text)
+                {
+                    StatusDSComms.Text = "Disconnected";
+                    StatusComms.Text = "...";
+                    StatusEnabled.Text = "...";
+                    StatusEStopped.Text = "...";
+                    StatusMode.Text = "...";
+                    StatusBatt.Text = "...";
+                }
+            };
+
+            Program.Director.StationStateChanged += (object? src, ConnectedStation station) =>
+            {
+                if (station.TeamNumber.ToString() == TeamNumber.Text)
+                {
+                    StatusComms.Text = station.HasComms.ToString();
+                    StatusEnabled.Text = station.IsEnabled.ToString();
+                    StatusEStopped.Text = station.IsEstopped.ToString();
+                    StatusMode.Text = station.RobotMode.ToString();
+                    StatusBatt.Text = station.BatteryVoltage.ToString();
+                }
+            };
+
 
         }
 
@@ -84,5 +117,6 @@ namespace App
                     break;
             }
         }
+
     }
 }

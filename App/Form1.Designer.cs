@@ -243,7 +243,7 @@
             // 
             this.StatusDSComms.AutoSize = true;
             this.StatusDSComms.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.StatusDSComms.Location = new System.Drawing.Point(99, 19);
+            this.StatusDSComms.Location = new System.Drawing.Point(104, 19);
             this.StatusDSComms.Name = "StatusDSComms";
             this.StatusDSComms.Size = new System.Drawing.Size(16, 15);
             this.StatusDSComms.TabIndex = 13;
@@ -253,7 +253,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(1, 19);
+            this.label9.Location = new System.Drawing.Point(6, 19);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(92, 15);
             this.label9.TabIndex = 12;
@@ -264,7 +264,7 @@
             // 
             this.StatusBatt.AutoSize = true;
             this.StatusBatt.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.StatusBatt.Location = new System.Drawing.Point(99, 154);
+            this.StatusBatt.Location = new System.Drawing.Point(104, 154);
             this.StatusBatt.Name = "StatusBatt";
             this.StatusBatt.Size = new System.Drawing.Size(16, 15);
             this.StatusBatt.TabIndex = 11;
@@ -275,7 +275,7 @@
             // 
             this.StatusMode.AutoSize = true;
             this.StatusMode.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.StatusMode.Location = new System.Drawing.Point(99, 127);
+            this.StatusMode.Location = new System.Drawing.Point(104, 127);
             this.StatusMode.Name = "StatusMode";
             this.StatusMode.Size = new System.Drawing.Size(16, 15);
             this.StatusMode.TabIndex = 10;
@@ -286,7 +286,7 @@
             // 
             this.StatusEStopped.AutoSize = true;
             this.StatusEStopped.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.StatusEStopped.Location = new System.Drawing.Point(99, 100);
+            this.StatusEStopped.Location = new System.Drawing.Point(104, 100);
             this.StatusEStopped.Name = "StatusEStopped";
             this.StatusEStopped.Size = new System.Drawing.Size(16, 15);
             this.StatusEStopped.TabIndex = 9;
@@ -297,7 +297,7 @@
             // 
             this.StatusEnabled.AutoSize = true;
             this.StatusEnabled.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.StatusEnabled.Location = new System.Drawing.Point(99, 74);
+            this.StatusEnabled.Location = new System.Drawing.Point(104, 74);
             this.StatusEnabled.Name = "StatusEnabled";
             this.StatusEnabled.Size = new System.Drawing.Size(16, 15);
             this.StatusEnabled.TabIndex = 8;
@@ -308,7 +308,7 @@
             // 
             this.StatusComms.AutoSize = true;
             this.StatusComms.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.StatusComms.Location = new System.Drawing.Point(99, 48);
+            this.StatusComms.Location = new System.Drawing.Point(104, 48);
             this.StatusComms.Name = "StatusComms";
             this.StatusComms.Size = new System.Drawing.Size(16, 15);
             this.StatusComms.TabIndex = 7;
@@ -318,7 +318,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(49, 154);
+            this.label8.Location = new System.Drawing.Point(54, 154);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(44, 15);
             this.label8.TabIndex = 6;
@@ -328,7 +328,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(55, 127);
+            this.label7.Location = new System.Drawing.Point(60, 127);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(38, 15);
             this.label7.TabIndex = 4;
@@ -338,7 +338,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(31, 100);
+            this.label6.Location = new System.Drawing.Point(36, 100);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(62, 15);
             this.label6.TabIndex = 3;
@@ -348,7 +348,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(41, 74);
+            this.label5.Location = new System.Drawing.Point(46, 74);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(52, 15);
             this.label5.TabIndex = 2;
@@ -358,7 +358,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 48);
+            this.label4.Location = new System.Drawing.Point(11, 48);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(87, 15);
             this.label4.TabIndex = 1;
