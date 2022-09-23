@@ -91,7 +91,7 @@
             // Tournament Level (Test)
             data[idx++] = (byte)Match.Level;
             // Match
-            data[idx++] = Match.Number;
+            WriteShort(Match.Number, ref data, ref idx);
             // Play/Replay
             data[idx++] = Match.Replay;
 
@@ -132,7 +132,7 @@
             // Tournament Level (Test)
             var level = (TournamentLevel)data[idx++];
             // Match
-            var matchNum = data[idx++];
+            var matchNum = ReadShort(data, ref idx);
             // Play/Replay
             var replayCount = data[idx++];
             Match = new Match(level, matchNum, replayCount);

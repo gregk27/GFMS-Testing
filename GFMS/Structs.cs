@@ -25,10 +25,10 @@
     public readonly struct Match
     {
         public readonly TournamentLevel Level;
-        public readonly byte Number;
+        public readonly ushort Number;
         public readonly byte Replay;
 
-        public Match(TournamentLevel level, byte number, byte replay = 0)
+        public Match(TournamentLevel level, ushort number, byte replay = 0)
         {
             Level = level;
             Number = number;
