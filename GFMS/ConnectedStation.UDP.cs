@@ -66,6 +66,7 @@ namespace GFMS
                 (data, length) = _state.ToByteArray();
             }
             _sock.Send(data, length);
+            //OnStateChanged.Invoke(this, this);
         }
 
         public void RecvMessage(DStoFMS message)
@@ -74,6 +75,7 @@ namespace GFMS
             {
                 _lastRecv = message;
                 _lastRecvTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                OnStateChanged.Invoke(this, this);
             }
         }
 

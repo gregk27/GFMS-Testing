@@ -13,6 +13,8 @@ namespace GFMS
         public readonly ushort TeamNumber;
         public readonly Station Station;
 
+        public event EventHandler<ConnectedStation> OnStateChanged;
+
         /// <summary>
         /// FMS to DS message, also used to hold robot's current state
         /// </summary>

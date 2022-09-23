@@ -26,6 +26,10 @@ namespace GFMS
 
         public static Match CurrentMatch = new(TournamentLevel.TEST, 2);
 
+        public event EventHandler<ConnectedStation>? StationStateChanged;
+        public event EventHandler<ConnectedStation>? StationConnected;
+        public event EventHandler<ConnectedStation>? StationDisconnected;
+
         public void Setup()
         {
 
@@ -189,7 +193,14 @@ namespace GFMS
                                 {
                                     Stations.Remove(ipep.Address);
                                 }
+                                // Pass event up
+                                StationDisconnected?.Invoke(this, cs);
                             };
+                            // Pass events up
+                            cs.OnStateChanged += (object? src, ConnectedStation srcStation) => StationStateChanged?.Invoke(this, srcStation);
+                            
+                            // Fire event on connect
+                            StationConnected?.Invoke(this, cs);
                         }
                         else
                         {
