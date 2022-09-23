@@ -1,9 +1,13 @@
+using GFMS;
 using System.Runtime.InteropServices;
 
 namespace App
 {
     internal static class Program
     {
+
+        public static Director Director;
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -16,6 +20,7 @@ namespace App
             // Spawn console to get log info until a better solution is added
             AllocConsole();
             Console.WriteLine("Hello World!");
+            Director = new Director();
             Application.Run(new Form1());
             FreeConsole();
         }
