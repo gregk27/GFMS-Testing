@@ -13,14 +13,6 @@ namespace GFMS
 {
     public class Director
     {
-        // Dummy main function to invoke director
-        public static void Main()
-        {
-            Console.WriteLine("Hello World");
-            new Director().Setup();
-            while (true) ;
-        }
-
         public static Dictionary<IPAddress, ConnectedStation> Stations = new();
         public static Dictionary<int, Station> StationMappings = new()
         {
