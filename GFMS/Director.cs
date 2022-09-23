@@ -40,6 +40,7 @@ namespace GFMS
         {
             lock (Stations)
             {
+                StationMappings.Clear();
                 foreach(var station in Stations.Keys)
                 {
                     var s = Stations[station];
@@ -56,6 +57,28 @@ namespace GFMS
                 foreach(var station in Stations)
                 {
                     station.Value.SetEnabled(enabled);
+                }
+            }
+        }
+
+        public void EStop()
+        {
+            lock (Stations)
+            {
+                foreach(var station in Stations)
+                {
+                    station.Value.EStop();
+                }
+            }
+        }
+
+        public void SetMode(Mode mode)
+        {
+            lock (Stations)
+            {
+                foreach(var station in Stations)
+                {
+                    station.Value.MatchPeriodic(mode, 120);
                 }
             }
         }
