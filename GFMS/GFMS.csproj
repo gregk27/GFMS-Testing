@@ -8,10 +8,10 @@
   </PropertyGroup>
 	
 	<ItemGroup>
-	  <Compile Include="ConnectedStation.TCP.cs">
+	  <Compile Update="ConnectedStation.TCP.cs">
 	    <DependentUpon>ConnectedStation.cs</DependentUpon>
 	  </Compile>
-	  <Compile Include="ConnectedStation.UDP.cs">
+	  <Compile Update="ConnectedStation.UDP.cs">
 	    <DependentUpon>ConnectedStation.cs</DependentUpon>
 	  </Compile>
 	</ItemGroup>
