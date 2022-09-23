@@ -25,11 +25,11 @@ namespace GFMS
                 while (true)
                 {
                     // Check for cancellation
-                    if (_sendingThread.IsCancellationRequested)
+                    if (_threadCancellation.IsCancellationRequested)
                         break;
                     // TODO: Implement processing for incoming TCP messages
                 }
-            }, _sendingThread.Token);
+            }, _threadCancellation.Token);
 
 
             // Immediately send drive station info message

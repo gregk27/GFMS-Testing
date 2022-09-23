@@ -13,7 +13,12 @@ namespace GFMS
         public readonly ushort TeamNumber;
         public readonly Station Station;
 
-        private CancellationTokenSource _sendingThread;
+        /// <summary>
+        /// FMS to DS message, also used to hold robot's current state
+        /// </summary>
+        private FMStoDS _state;
+
+        private CancellationTokenSource _threadCancellation;
 
         public ConnectedStation(ushort teamNumber, Station station, TcpClient client, IPAddress destination)
         {
@@ -21,7 +26,12 @@ namespace GFMS
             TeamNumber = teamNumber;
             Station = station;
 
-            _sendingThread = new();
+            // Initialize state information
+            _state = new FMStoDS();
+            _state.Station = station;
+            _state.Mode = DEFAULT_MODE;
+
+            _threadCancellation = new();
 
             UDPInit();
 
@@ -36,7 +46,7 @@ namespace GFMS
         public void Dispose()
         {
             // End sending thread when done
-            _sendingThread.Cancel();
+            _threadCancellation.Cancel();
         }
 
         /// <summary>
@@ -47,23 +57,23 @@ namespace GFMS
         /// <param name="remainingTime">Time left in mode</param>
         public void MatchPeriodic(Mode mode, ushort remainingTime)
         {
-            lock (_lastSent)
+            lock (_state)
             {
-                _lastSent.RemainingTime = remainingTime;
-                _lastSent.Mode = mode;
+                _state.RemainingTime = remainingTime;
+                _state.Mode = mode;
             }
         }
 
         public void SetMatchData(Match match)
         {
-            _lastSent.Match = match;
+            _state.Match = match;
         }
 
         public void SetEnabled(bool enabled)
         {
-            lock (_lastSent)
+            lock (_state)
             {
-                _lastSent.Enabled = enabled;
+                _state.Enabled = enabled;
                 // Send enable state change as priority message
                 SendMessage();
             }
@@ -71,9 +81,9 @@ namespace GFMS
 
         public void EStop()
         {
-            lock (_lastSent)
+            lock (_state)
             {
-                _lastSent.EStopped = true;
+                _state.EStopped = true;
                 // Send E-Stop as priority message
                 SendMessage();
             }
