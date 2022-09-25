@@ -21,7 +21,7 @@ namespace GFMS
             while (true) ;
         }
 
-        public static Dictionary<IPAddress, ConnectedStation> Stations = new();
+        public static Dictionary<IPAddress, DSConnection> Stations = new();
         public static Dictionary<int, Station> StationMappings = new()
         {
             {1, Station.RED_1 },
@@ -157,7 +157,7 @@ namespace GFMS
                                 Console.WriteLine($"Connecting team {tmsg.TeamNumber}@{ipep.Address} to station {StationMappings[tmsg.TeamNumber]}");
 
                             // Establish the new connection
-                            var cs = new ConnectedStation(tmsg.TeamNumber, StationMappings[tmsg.TeamNumber], client, ipep.Address);
+                            var cs = new DSConnection(tmsg.TeamNumber, StationMappings[tmsg.TeamNumber], client, ipep.Address);
                             // Initialize match information
                             cs.SetMatchData(CurrentMatch);
                             cs.MatchPeriodic(Mode.AUTO, 20);

@@ -8,11 +8,11 @@
   </PropertyGroup>
 	
 	<ItemGroup>
-	  <Compile Update="ConnectedStation.TCP.cs">
-	    <DependentUpon>ConnectedStation.cs</DependentUpon>
+	  <Compile Update="DSConnection.TCP.cs">
+	    <DependentUpon>DSConnection.cs</DependentUpon>
 	  </Compile>
-	  <Compile Update="ConnectedStation.UDP.cs">
-	    <DependentUpon>ConnectedStation.cs</DependentUpon>
+	  <Compile Update="DSConnection.UDP.cs">
+	    <DependentUpon>DSConnection.cs</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 	

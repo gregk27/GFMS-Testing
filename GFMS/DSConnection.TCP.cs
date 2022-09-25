@@ -5,7 +5,7 @@ using System.Net.Sockets;
 
 namespace GFMS
 {
-    public partial class ConnectedStation : IDisposable
+    public partial class DSConnection : IDisposable
     {
         private TcpClient _tcpClient;
         private NetworkStream _tcpStream;

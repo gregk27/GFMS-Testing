@@ -5,7 +5,7 @@ using System.Net.Sockets;
 
 namespace GFMS
 {
-    public partial class ConnectedStation : IDisposable
+    public partial class DSConnection : IDisposable
     {
         private const Mode DEFAULT_MODE = Mode.TELE;
 
@@ -20,7 +20,7 @@ namespace GFMS
 
         private CancellationTokenSource _threadCancellation;
 
-        public ConnectedStation(ushort teamNumber, Station station, TcpClient client, IPAddress destination)
+        public DSConnection(ushort teamNumber, Station station, TcpClient client, IPAddress destination)
         {
             IPAddress = destination;
             TeamNumber = teamNumber;
@@ -38,7 +38,7 @@ namespace GFMS
             TCPInit(client);
         }
 
-        ~ConnectedStation()
+        ~DSConnection()
         {
             Dispose();
         }
