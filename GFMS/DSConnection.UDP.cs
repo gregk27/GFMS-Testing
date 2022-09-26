@@ -1,5 +1,4 @@
-﻿using GFMS.Messages.TCP;
-using GFMS.Messages.UDP;
+﻿using GFMS.Messages.UDP;
 using System.Net;
 using System.Net.Sockets;
 
@@ -10,13 +9,14 @@ namespace GFMS
         private const int DS_PORT = 1121;
         private const int INCOMING_TIMEOUT = 1500;
 
-        private DStoFMS? _lastRecv;
+        public DStoFMS? LastRecv;
         public bool IsAlive { get; private set; }
         private long _lastRecvTime;
 
         private UdpClient _sock;
+        private ushort _seqNum = 0;
 
-
+        public event EventHandler? OnMessageReceived;
         public event EventHandler OnDisconnect;
 
         /// <summary>
@@ -27,9 +27,10 @@ namespace GFMS
             // Establish UDP connection
             _sock = new();
             _sock.Connect(new IPEndPoint(IPAddress, DS_PORT));
-
+            
             _lastRecvTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             IsAlive = true;
+            _seqNum = 0;
 
             // UDP heartbeat task
             Task.Run(async () =>
@@ -56,24 +57,29 @@ namespace GFMS
             }, _threadCancellation.Token);
         }
 
-        private void SendMessage()
+        /// <summary>
+        /// Automatically invoked at ~500ms period
+        /// Can be called externally for priority messages (such as enable/disable/e-stop)
+        /// </summary>
+        public void SendMessage()
         {
             byte[] data;
             int length;
-            lock (_state)
-            {
-                _state.SequenceNum++;
-                (data, length) = _state.ToByteArray();
-            }
+            var toSend = _stateProvider();
+
+            toSend.SequenceNum = _seqNum;
+            (data, length) = toSend.ToByteArray();
+            
             _sock.Send(data, length);
         }
 
         public void RecvMessage(DStoFMS message)
         {
-            if (_lastRecv == null || message.SequenceNum > _lastRecv.SequenceNum)
+            if (LastRecv == null || message.SequenceNum > LastRecv.SequenceNum)
             {
-                _lastRecv = message;
+                LastRecv = message;
                 _lastRecvTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                OnMessageReceived?.Invoke(this, EventArgs.Empty);
             }
         }
 

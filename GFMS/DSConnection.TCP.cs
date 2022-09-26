@@ -1,6 +1,4 @@
 ﻿using GFMS.Messages.TCP;
-using GFMS.Messages.UDP;
-using System.Net;
 using System.Net.Sockets;
 
 namespace GFMS
@@ -34,7 +32,7 @@ namespace GFMS
 
             // Immediately send drive station info message
             StationInfoMessage smsg = new();
-            smsg.Station = Station;
+            smsg.Station = _stateProvider().Station;
             smsg.Status = StationInfoMessage.StatusTypes.GOOD;
             var (data, len) = smsg.ToByteArray();
             _tcpStream.Write(data, 0, len);
