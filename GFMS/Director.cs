@@ -150,6 +150,7 @@ namespace GFMS
 
                             // Establish the new connection
                             var cs = new DSConnection(() => team.State, client, ipep.Address);
+                            team.Connect(cs);
                             lock (_stations)
                             {
                                 _stations.Add(ipep.Address, cs);
