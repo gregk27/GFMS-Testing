@@ -43,4 +43,31 @@
                 return $"{Level} {Number} Replay {Replay}";
         }
     }
+
+    public readonly struct MatchConfig
+    {
+
+        public readonly Match Number;
+        private readonly Dictionary<ushort, DriveStation> StationMappings = new();
+        internal readonly DriveStation[] Stations;
+
+        public MatchConfig(Match number, DriveStation[] stations)
+        {
+            Number = number;
+            Stations = stations;
+            foreach (var station in stations)
+            {
+                StationMappings.Add(station.TeamNumber, station);
+                station.SetMatchInfo(number);
+            }
+        }
+
+        internal DriveStation? GetTeamStation(ushort teamNum)
+        {
+            if (StationMappings.ContainsKey(teamNum))
+                return StationMappings[teamNum];
+            return null;
+        }
+
+    }
 }
