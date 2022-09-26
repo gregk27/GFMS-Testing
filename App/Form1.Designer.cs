@@ -68,7 +68,6 @@
             this.label1.Size = new System.Drawing.Size(85, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Team Number:";
-            this.label1.UseWaitCursor = true;
             // 
             // groupBox1
             // 
@@ -83,7 +82,6 @@
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Station Options";
-            this.groupBox1.UseWaitCursor = true;
             // 
             // ApplyStation
             // 
@@ -93,7 +91,6 @@
             this.ApplyStation.TabIndex = 4;
             this.ApplyStation.Text = "Apply";
             this.ApplyStation.UseVisualStyleBackColor = true;
-            this.ApplyStation.UseWaitCursor = true;
             this.ApplyStation.Click += new System.EventHandler(this.ApplyStation_Click);
             // 
             // StationSelect
@@ -110,7 +107,6 @@
             this.StationSelect.Name = "StationSelect";
             this.StationSelect.Size = new System.Drawing.Size(121, 23);
             this.StationSelect.TabIndex = 3;
-            this.StationSelect.UseWaitCursor = true;
             // 
             // label2
             // 
@@ -120,7 +116,6 @@
             this.label2.Size = new System.Drawing.Size(47, 15);
             this.label2.TabIndex = 2;
             this.label2.Text = "Station:";
-            this.label2.UseWaitCursor = true;
             // 
             // TeamNumber
             // 
@@ -128,7 +123,6 @@
             this.TeamNumber.Name = "TeamNumber";
             this.TeamNumber.Size = new System.Drawing.Size(153, 23);
             this.TeamNumber.TabIndex = 1;
-            this.TeamNumber.UseWaitCursor = true;
             // 
             // groupBox2
             // 
@@ -167,7 +161,6 @@
             this.EnableButton.TabIndex = 5;
             this.EnableButton.Text = "Enable";
             this.EnableButton.UseVisualStyleBackColor = true;
-            this.EnableButton.UseWaitCursor = true;
             this.EnableButton.Click += new System.EventHandler(this.EnableButton_Click);
             // 
             // EStopButton
@@ -179,7 +172,6 @@
             this.EStopButton.TabIndex = 7;
             this.EStopButton.Text = "E-Stop";
             this.EStopButton.UseVisualStyleBackColor = true;
-            this.EStopButton.UseWaitCursor = true;
             this.EStopButton.Click += new System.EventHandler(this.EStopButton_Click);
             // 
             // DisableButton
@@ -191,7 +183,6 @@
             this.DisableButton.TabIndex = 8;
             this.DisableButton.Text = "Disable";
             this.DisableButton.UseVisualStyleBackColor = true;
-            this.DisableButton.UseWaitCursor = true;
             this.DisableButton.Click += new System.EventHandler(this.DisableButton_Click);
             // 
             // ModeSelect
@@ -205,7 +196,6 @@
             this.ModeSelect.Name = "ModeSelect";
             this.ModeSelect.Size = new System.Drawing.Size(121, 23);
             this.ModeSelect.TabIndex = 6;
-            this.ModeSelect.UseWaitCursor = true;
             this.ModeSelect.SelectedIndexChanged += new System.EventHandler(this.ModeSelect_Changed);
             // 
             // label3
@@ -216,7 +206,6 @@
             this.label3.Size = new System.Drawing.Size(41, 15);
             this.label3.TabIndex = 5;
             this.label3.Text = "Mode:";
-            this.label3.UseWaitCursor = true;
             // 
             // groupBox3
             // 
@@ -248,7 +237,6 @@
             this.StatusDSComms.Size = new System.Drawing.Size(16, 15);
             this.StatusDSComms.TabIndex = 13;
             this.StatusDSComms.Text = "...";
-            this.StatusDSComms.UseWaitCursor = true;
             // 
             // label9
             // 
@@ -258,7 +246,6 @@
             this.label9.Size = new System.Drawing.Size(92, 15);
             this.label9.TabIndex = 12;
             this.label9.Text = "Station Comms:";
-            this.label9.UseWaitCursor = true;
             // 
             // StatusBatt
             // 
@@ -269,7 +256,6 @@
             this.StatusBatt.Size = new System.Drawing.Size(16, 15);
             this.StatusBatt.TabIndex = 11;
             this.StatusBatt.Text = "...";
-            this.StatusBatt.UseWaitCursor = true;
             // 
             // StatusMode
             // 
@@ -280,7 +266,6 @@
             this.StatusMode.Size = new System.Drawing.Size(16, 15);
             this.StatusMode.TabIndex = 10;
             this.StatusMode.Text = "...";
-            this.StatusMode.UseWaitCursor = true;
             // 
             // StatusEStopped
             // 
@@ -291,7 +276,6 @@
             this.StatusEStopped.Size = new System.Drawing.Size(16, 15);
             this.StatusEStopped.TabIndex = 9;
             this.StatusEStopped.Text = "...";
-            this.StatusEStopped.UseWaitCursor = true;
             // 
             // StatusEnabled
             // 
@@ -302,7 +286,6 @@
             this.StatusEnabled.Size = new System.Drawing.Size(16, 15);
             this.StatusEnabled.TabIndex = 8;
             this.StatusEnabled.Text = "...";
-            this.StatusEnabled.UseWaitCursor = true;
             // 
             // StatusComms
             // 
@@ -313,7 +296,6 @@
             this.StatusComms.Size = new System.Drawing.Size(16, 15);
             this.StatusComms.TabIndex = 7;
             this.StatusComms.Text = "...";
-            this.StatusComms.UseWaitCursor = true;
             // 
             // label8
             // 
@@ -323,7 +305,6 @@
             this.label8.Size = new System.Drawing.Size(44, 15);
             this.label8.TabIndex = 6;
             this.label8.Text = "Battery";
-            this.label8.UseWaitCursor = true;
             // 
             // label7
             // 
@@ -333,7 +314,6 @@
             this.label7.Size = new System.Drawing.Size(38, 15);
             this.label7.TabIndex = 4;
             this.label7.Text = "Mode";
-            this.label7.UseWaitCursor = true;
             // 
             // label6
             // 
@@ -343,7 +323,6 @@
             this.label6.Size = new System.Drawing.Size(62, 15);
             this.label6.TabIndex = 3;
             this.label6.Text = "E-Stopped";
-            this.label6.UseWaitCursor = true;
             // 
             // label5
             // 
@@ -353,7 +332,6 @@
             this.label5.Size = new System.Drawing.Size(52, 15);
             this.label5.TabIndex = 2;
             this.label5.Text = "Enabled:";
-            this.label5.UseWaitCursor = true;
             // 
             // label4
             // 
@@ -363,7 +341,6 @@
             this.label4.Size = new System.Drawing.Size(87, 15);
             this.label4.TabIndex = 1;
             this.label4.Text = "Robot Comms:";
-            this.label4.UseWaitCursor = true;
             // 
             // Form1
             // 
