@@ -9,50 +9,18 @@ namespace App
             InitializeComponent();
         }
 
+        private DriveStation? _station;
+
         private void Form1_Load(object sender, EventArgs e)
         {
-            Program.Director.StationConnected += (object? src, ConnectedStation station) =>
-            {
-                if (station.TeamNumber.ToString() == TeamNumber.Text)
-                {
-                    StatusDSComms.Text = "Connected";
-                }
-            };
-
-            Program.Director.StationConnected += (object? src, ConnectedStation station) =>
-            {
-                if (station.TeamNumber.ToString() == TeamNumber.Text)
-                {
-                    StatusDSComms.Text = "Disconnected";
-                    StatusComms.Text = "...";
-                    StatusEnabled.Text = "...";
-                    StatusEStopped.Text = "...";
-                    StatusMode.Text = "...";
-                    StatusBatt.Text = "...";
-                }
-            };
-
-            Program.Director.StationStateChanged += (object? src, ConnectedStation station) =>
-            {
-                if (station.TeamNumber.ToString() == TeamNumber.Text)
-                {
-                    StatusComms.Text = station.HasComms.ToString();
-                    StatusEnabled.Text = station.IsEnabled.ToString();
-                    StatusEStopped.Text = station.IsEstopped.ToString();
-                    StatusMode.Text = station.RobotMode.ToString();
-                    StatusBatt.Text = station.BatteryVoltage.ToString();
-                }
-            };
-
 
         }
 
         private void ApplyStation_Click(object sender, EventArgs e)
         {
-            Program.Director.ClearStations();
             try
             {
-                short teamNumber = short.Parse(TeamNumber.Text);
+                ushort teamNumber = ushort.Parse(TeamNumber.Text);
                 Station? ds = null;
                 switch (StationSelect.SelectedIndex)
                 {
@@ -75,7 +43,9 @@ namespace App
                         ds = Station.BLUE_3;
                         break;
                 }
-                Director.StationMappings.Add(teamNumber, (Station)ds);
+                _station = new DriveStation(teamNumber, (Station)ds);
+                var match = new MatchConfig(new Match(TournamentLevel.TEST, 1), new DriveStation[] { _station });
+                Director.SetMatch(match);
             }
             catch (Exception ex)
             {
@@ -83,34 +53,70 @@ namespace App
             }
         }
 
+        private void StationChanged()
+        {
+            _station.OnConnect += (object? src, DriveStation station) =>
+            {
+                if (station.TeamNumber.ToString() == TeamNumber.Text)
+                {
+                    StatusDSComms.Text = "Connected";
+                }
+            };
+
+            _station.OnDisconnect += (object? src, DriveStation station) =>
+            {
+                if (station.TeamNumber.ToString() == TeamNumber.Text)
+                {
+                    StatusDSComms.Text = "Disconnected";
+                    StatusComms.Text = "...";
+                    StatusEnabled.Text = "...";
+                    StatusEStopped.Text = "...";
+                    StatusMode.Text = "...";
+                    StatusBatt.Text = "...";
+                }
+            };
+
+            _station.OnStateChanged += (object? src, DriveStation station) =>
+            {
+                if (station.TeamNumber.ToString() == TeamNumber.Text)
+                {
+                    StatusComms.Text = station.RobotComms.ToString();
+                    StatusEnabled.Text = station.RobotEnabled.ToString();
+                    StatusEStopped.Text = station.RobotEStopped.ToString();
+                    StatusMode.Text = station.RobotMode.ToString();
+                    StatusBatt.Text = station.BatteryVoltage.ToString();
+                }
+            };
+        }
+
         private void EnableButton_Click(object sender, EventArgs e)
         {
-            Program.Director.SetEnabled(true);
+            Director.SetEnabled(true);
         }
 
         private void DisableButton_Click(object sender, EventArgs e)
         {
-            Program.Director.SetEnabled(false);
+            Director.SetEnabled(false);
         }
 
         private void EStopButton_Click(object sender, EventArgs e)
         {
-            Program.Director.EStop();
+            Director.EStop();
         }
 
         private void ModeSelect_Changed(object sender, EventArgs e)
         {
-            Program.Director.SetEnabled(false);
+            Director.SetEnabled(false);
             switch (ModeSelect.SelectedIndex)
             {
                 case 0:
-                    Program.Director.SetMode(Mode.TELE);
+                    Director.SetMode(Mode.TELE);
                     break;
                 case 1:
-                    Program.Director.SetMode(Mode.AUTO);
+                    Director.SetMode(Mode.AUTO);
                     break;
                 case 2:
-                    Program.Director.SetMode(Mode.TEST);
+                    Director.SetMode(Mode.TEST);
                     break;
                 default:
                     MessageBox.Show("Invalid mode selected");

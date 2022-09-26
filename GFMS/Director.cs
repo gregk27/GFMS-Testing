@@ -41,34 +41,25 @@ namespace GFMS
 
         public static void SetEnabled(bool enabled)
         {
-            lock (_stations)
+            foreach(var station in _currentMatch.Stations)
             {
-                foreach(var station in _currentMatch.Stations)
-                {
-                    station.SetEnabled(enabled);
-                }
+                station.SetEnabled(enabled);
             }
         }
 
-        public void EStop()
+        public static void EStop()
         {
-            lock (Stations)
+            foreach(var station in _currentMatch.Stations)
             {
-                foreach(var station in Stations)
-                {
-                    station.Value.EStop();
-                }
+                station.EStop();
             }
         }
 
-        public void SetMode(Mode mode)
+        public static void SetMode(Mode mode)
         {
-            lock (Stations)
+            foreach(var station in _currentMatch.Stations)
             {
-                foreach(var station in Stations)
-                {
-                    station.Value.MatchPeriodic(mode, 120);
-                }
+                station.MatchPeriodic(mode, 120);
             }
         }
 
@@ -176,14 +167,7 @@ namespace GFMS
                                 {
                                     _stations.Remove(ipep.Address);
                                 }
-                                // Pass event up
-                                StationDisconnected?.Invoke(this, cs);
                             };
-                            // Pass events up
-                            cs.OnStateChanged += (object? src, ConnectedStation srcStation) => StationStateChanged?.Invoke(this, srcStation);
-                            
-                            // Fire event on connect
-                            StationConnected?.Invoke(this, cs);
                         }
                         else
                         {
