@@ -46,6 +46,7 @@ namespace App
                 _station = new DriveStation(teamNumber, (Station)ds);
                 var match = new MatchConfig(new Match(TournamentLevel.TEST, 1), new DriveStation[] { _station });
                 Director.SetMatch(match);
+                StationChanged();
             }
             catch (Exception ex)
             {
