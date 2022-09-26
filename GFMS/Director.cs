@@ -22,7 +22,7 @@ namespace GFMS
         }
 
         private static Dictionary<IPAddress, DSConnection> _stations = new();
-        public static MatchConfig _currentMatch { get; private set; }
+        public static MatchConfig? _currentMatch { get; private set; }
 
         public static void Setup()
         {
@@ -38,7 +38,7 @@ namespace GFMS
         {
             lock (_stations)
             {
-                foreach(var station in _currentMatch.Stations)
+                foreach(var station in _currentMatch?.Stations ?? Array.Empty<DriveStation>())
                 {
                     station.Disconnect();
                 }
@@ -49,9 +49,10 @@ namespace GFMS
 
         public static void SetEnabled(bool enabled)
         {
+            if (_currentMatch == null) return;
             lock (_stations)
             {
-                foreach(var station in _currentMatch.Stations)
+                foreach(var station in _currentMatch?.Stations ?? Array.Empty<DriveStation>())
                 {
                     station.SetEnabled(enabled);
                 }
@@ -136,7 +137,7 @@ namespace GFMS
                     {
                         // If the team is expected to connect, proceede
                         DriveStation? team;
-                        if ((team = _currentMatch.GetTeamStation(tmsg.TeamNumber)) != null)
+                        if ((team = _currentMatch?.GetTeamStation(tmsg.TeamNumber)) != null)
                         {
                             if (_stations.ContainsKey(ipep.Address))
                             {
