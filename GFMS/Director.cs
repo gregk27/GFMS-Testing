@@ -21,18 +21,8 @@ namespace GFMS
             while (true) ;
         }
 
-        public static Dictionary<IPAddress, DSConnection> Stations = new();
-        public static Dictionary<int, Station> StationMappings = new()
-        {
-            {1, Station.RED_1 },
-            {2, Station.RED_2 },
-            {3, Station.RED_3 },
-            {4, Station.BLUE_1 },
-            {5, Station.BLUE_2 },
-            {6, Station.BLUE_3 },
-        };
-
-        public static Match CurrentMatch = new(TournamentLevel.TEST, 2);
+        private static Dictionary<IPAddress, DSConnection> _stations = new();
+        public static MatchConfig _currentMatch { get; private set; }
 
         public static void Setup()
         {
@@ -44,26 +34,26 @@ namespace GFMS
             Task.Run(TCPListener);
         }
 
-        public static void ClearStations()
+        public static void SetMatch(MatchConfig match)
         {
-            lock (Stations)
+            lock (_stations)
             {
-                foreach(var station in Stations.Keys)
+                foreach(var station in _currentMatch.Stations)
                 {
-                    var s = Stations[station];
-                    Stations.Remove(station);
-                    s.Dispose();
+                    station.Disconnect();
                 }
+                _stations.Clear();
             }
+            _currentMatch = match;
         }
 
         public static void SetEnabled(bool enabled)
         {
-            lock (Stations)
+            lock (_stations)
             {
-                foreach(var station in Stations)
+                foreach(var station in _currentMatch.Stations)
                 {
-                    station.Value.SetEnabled(enabled);
+                    station.SetEnabled(enabled);
                 }
             }
         }
@@ -84,11 +74,11 @@ namespace GFMS
                 {
                     var message = Message.FromBytes<DStoFMS>(data);
                     // If the sender is known, update last recevied message
-                    if (Stations.ContainsKey(sender.Address))
+                    if (_stations.ContainsKey(sender.Address))
                     {
-                        lock (Stations)
+                        lock (_stations)
                         {
-                            Stations[sender.Address].RecvMessage(message);
+                            _stations[sender.Address].RecvMessage(message);
                         }
                     }
                     else
@@ -145,34 +135,32 @@ namespace GFMS
                     if (msg is TeamNumberMessage tmsg)
                     {
                         // If the team is expected to connect, proceede
-                        if (StationMappings.ContainsKey(tmsg.TeamNumber))
+                        DriveStation? team;
+                        if ((team = _currentMatch.GetTeamStation(tmsg.TeamNumber)) != null)
                         {
-                            if (Stations.ContainsKey(ipep.Address))
+                            if (_stations.ContainsKey(ipep.Address))
                             {
                                 Console.WriteLine($"Re-Connection from {tmsg.TeamNumber}");
                                 // Dispose of any remnants of existing connection
-                                Stations[ipep.Address].Dispose();
+                                team.Disconnect();
                             }
                             else
-                                Console.WriteLine($"Connecting team {tmsg.TeamNumber}@{ipep.Address} to station {StationMappings[tmsg.TeamNumber]}");
+                                Console.WriteLine($"Connecting team {tmsg.TeamNumber}@{ipep.Address} to station {team.Station}");
 
                             // Establish the new connection
-                            var cs = new DSConnection(tmsg.TeamNumber, StationMappings[tmsg.TeamNumber], client, ipep.Address);
-                            // Initialize match information
-                            cs.SetMatchData(CurrentMatch);
-                            cs.MatchPeriodic(Mode.AUTO, 20);
-                            lock (Stations)
+                            var cs = new DSConnection(() => team.State, client, ipep.Address);
+                            lock (_stations)
                             {
-                                Stations.Add(ipep.Address, cs);
+                                _stations.Add(ipep.Address, cs);
                             }
                             // Register disconnect callback
                             cs.OnDisconnect += (object? src, EventArgs e) =>
                             {
-                                Console.WriteLine($"Team {cs.TeamNumber} disconnected unexpectedly");
+                                Console.WriteLine($"Team {team.TeamNumber} disconnected unexpectedly");
                                 cs.Dispose();
-                                lock (Stations)
+                                lock (_stations)
                                 {
-                                    Stations.Remove(ipep.Address);
+                                    _stations.Remove(ipep.Address);
                                 }
                             };
                         }
