@@ -71,6 +71,7 @@ namespace GFMS
             (data, length) = toSend.ToByteArray();
             
             _sock.Send(data, length);
+            //OnStateChanged.Invoke(this, this);
         }
 
         public void RecvMessage(DStoFMS message)

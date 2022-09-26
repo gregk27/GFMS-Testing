@@ -13,14 +13,6 @@ namespace GFMS
 {
     public static class Director
     {
-        // Dummy main function to invoke director
-        public static void Main()
-        {
-            Console.WriteLine("Hello World");
-            Setup();
-            while (true) ;
-        }
-
         private static Dictionary<IPAddress, DSConnection> _stations = new();
         public static MatchConfig _currentMatch { get; private set; }
 
@@ -54,6 +46,28 @@ namespace GFMS
                 foreach(var station in _currentMatch.Stations)
                 {
                     station.SetEnabled(enabled);
+                }
+            }
+        }
+
+        public void EStop()
+        {
+            lock (Stations)
+            {
+                foreach(var station in Stations)
+                {
+                    station.Value.EStop();
+                }
+            }
+        }
+
+        public void SetMode(Mode mode)
+        {
+            lock (Stations)
+            {
+                foreach(var station in Stations)
+                {
+                    station.Value.MatchPeriodic(mode, 120);
                 }
             }
         }
@@ -162,7 +176,14 @@ namespace GFMS
                                 {
                                     _stations.Remove(ipep.Address);
                                 }
+                                // Pass event up
+                                StationDisconnected?.Invoke(this, cs);
                             };
+                            // Pass events up
+                            cs.OnStateChanged += (object? src, ConnectedStation srcStation) => StationStateChanged?.Invoke(this, srcStation);
+                            
+                            // Fire event on connect
+                            StationConnected?.Invoke(this, cs);
                         }
                         else
                         {
