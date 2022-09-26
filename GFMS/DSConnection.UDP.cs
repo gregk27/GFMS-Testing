@@ -16,7 +16,7 @@ namespace GFMS
         private UdpClient _sock;
         private ushort _seqNum = 0;
 
-        public event EventHandler? OnMessageReceived;
+        public event EventHandler<DStoFMS>? OnMessageReceived;
         public event EventHandler OnDisconnect;
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace GFMS
             {
                 LastRecv = message;
                 _lastRecvTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
-                OnMessageReceived?.Invoke(this, EventArgs.Empty);
+                OnMessageReceived?.Invoke(this, message);
             }
         }
 
