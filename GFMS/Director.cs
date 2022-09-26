@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace GFMS
 {
-    public class Director
+    public static class Director
     {
         // Dummy main function to invoke director
         public static void Main()
         {
             Console.WriteLine("Hello World");
-            new Director().Setup();
+            Setup();
             while (true) ;
         }
 
@@ -34,7 +34,7 @@ namespace GFMS
 
         public static Match CurrentMatch = new(TournamentLevel.TEST, 2);
 
-        public void Setup()
+        public static void Setup()
         {
 
             // Icomping UDP messages
@@ -44,7 +44,7 @@ namespace GFMS
             Task.Run(TCPListener);
         }
 
-        public void ClearStations()
+        public static void ClearStations()
         {
             lock (Stations)
             {
@@ -57,7 +57,7 @@ namespace GFMS
             }
         }
 
-        public void SetEnabled(bool enabled)
+        public static void SetEnabled(bool enabled)
         {
             lock (Stations)
             {
@@ -71,7 +71,7 @@ namespace GFMS
         /// <summary>
         /// Function invoked in task to listen and distribute incoming TCP messages
         /// </summary>
-        private void UDPListener()
+        private static void UDPListener()
         {
             byte[] data = new byte[1024];
             UdpClient sock = new UdpClient(new IPEndPoint(IPAddress.Any, 1160));
@@ -107,7 +107,7 @@ namespace GFMS
         /// <summary>
         /// Function invoked in task to listen for incoming TCP connections
         /// </summary>
-        private void TCPListener()
+        private static void TCPListener()
         {
             TcpListener server = null;
 
