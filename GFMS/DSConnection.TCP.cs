@@ -3,7 +3,7 @@ using System.Net.Sockets;
 
 namespace GFMS
 {
-    public partial class DSConnection : IDisposable
+    internal partial class DSConnection : IDisposable
     {
         private TcpClient _tcpClient;
         private NetworkStream _tcpStream;

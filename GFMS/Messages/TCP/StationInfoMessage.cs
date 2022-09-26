@@ -1,6 +1,6 @@
 ﻿namespace GFMS.Messages.TCP
 {
-    public class StationInfoMessage : TagMessage
+    internal class StationInfoMessage : TagMessage
     {
         // Taken from FMS to DS message
         public byte StationNum

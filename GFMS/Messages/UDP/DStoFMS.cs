@@ -1,6 +1,6 @@
 ﻿namespace GFMS.Messages.UDP
 {
-    public class DStoFMS : Message
+    internal class DStoFMS : Message
     {
         public ushort SequenceNum;
 

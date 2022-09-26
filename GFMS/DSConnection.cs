@@ -5,7 +5,7 @@ using System.Net.Sockets;
 
 namespace GFMS
 {
-    public partial class DSConnection : IDisposable
+    internal partial class DSConnection : IDisposable
     {
         public readonly IPAddress IPAddress;
 

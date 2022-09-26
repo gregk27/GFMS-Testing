@@ -4,7 +4,7 @@ using System.Net.Sockets;
 
 namespace GFMS
 {
-    public partial class DSConnection : IDisposable
+    internal partial class DSConnection : IDisposable
     {
         private const int DS_PORT = 1121;
         private const int INCOMING_TIMEOUT = 1500;

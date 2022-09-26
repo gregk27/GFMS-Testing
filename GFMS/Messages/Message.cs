@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GFMS.Messages
 {
-    public abstract class Message
+    internal abstract class Message
     {
         public Message() { }
 

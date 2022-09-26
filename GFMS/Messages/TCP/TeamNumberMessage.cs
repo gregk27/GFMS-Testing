@@ -1,6 +1,6 @@
 ﻿namespace GFMS.Messages.TCP
 {
-    public class TeamNumberMessage : TagMessage
+    internal class TeamNumberMessage : TagMessage
     {
         public ushort TeamNumber
         {

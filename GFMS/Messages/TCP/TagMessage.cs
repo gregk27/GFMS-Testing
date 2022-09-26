@@ -1,6 +1,6 @@
 ﻿namespace GFMS.Messages.TCP
 {
-    public class TagMessage : Message
+    internal class TagMessage : Message
     {
 
         public virtual TagTypes Type { get; protected set; }
