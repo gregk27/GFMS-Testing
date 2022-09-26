@@ -68,6 +68,7 @@ namespace GFMS
             var toSend = _stateProvider();
 
             toSend.SequenceNum = _seqNum;
+            _seqNum++;
             (data, length) = toSend.ToByteArray();
             
             _sock.Send(data, length);
