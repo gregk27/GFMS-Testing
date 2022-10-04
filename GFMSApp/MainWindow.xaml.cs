@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GFMS;
+using GFMSApp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,17 @@ namespace GFMSApp
         public MainWindow()
         {
             InitializeComponent();
+
+            List<StationVM> stations = new();
+            stations.Add(new(new(2708, Station.RED_1)));
+            stations.Add(new(new(2, Station.RED_2)));
+            stations.Add(new(new(3, Station.RED_3)));
+
+            stations.Add(new(new(2708, Station.BLUE_1)));
+            stations.Add(new(new(5, Station.BLUE_2)));
+            stations.Add(new(new(6, Station.BLUE_3)));
+
+            ActiveTeamsList.ItemsSource = stations;
         }
     }
 }

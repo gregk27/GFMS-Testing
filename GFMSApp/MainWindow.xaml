@@ -6,7 +6,38 @@
         xmlns:local="clr-namespace:GFMSApp"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.75*"/>
+            <ColumnDefinition Width="0.5*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.6*"/>
+            <RowDefinition Height="0.5*"/>
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Column="0" Grid.Row="0" Header="Current Teams">
+            <ItemsControl Name="ActiveTeamsList">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="15" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+                            <Ellipse Width="10" Height="10" Fill="{Binding StatusColour}" StrokeThickness="0.5" Stroke="Black" Grid.Column="0"/>
+                            <Label Content="{Binding TeamNumber}" Grid.Column="1" Margin="0,0,5,0"/>
+                            <Label Content="{Binding StationName}" Grid.Column="2" Margin="0,0,5,0"/>
+                            <Label Content="{Binding EnabledText.Text}" Foreground="{Binding EnabledText.Colour}" Grid.Column="3"/>
+                            <Button Content="{Binding EnableButton.Text}" Command="{Binding EnableButton.Command}" Cursor="Hand"  Grid.Column="4" Padding="5, 1" Margin="5, 3" />
+                            <Button Content="E-Stop" Cursor="Hand" Grid.Column="5" Padding="5, 1" Margin="0, 3"/>
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </GroupBox>
     </Grid>
 </Window>
