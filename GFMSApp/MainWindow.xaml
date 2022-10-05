@@ -62,16 +62,18 @@
                                                 <ColumnDefinition Width="auto" />
                                                 <ColumnDefinition Width="auto" />
                                                 <ColumnDefinition Width="auto" />
-                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="*" MinWidth="60" />
+                                                <ColumnDefinition Width="auto" />
                                             </Grid.ColumnDefinitions>
                                             <Label Grid.Column="0" Content="Station:" />
-                                            <ComboBox Grid.Column="1" Width="50" Margin="5, 0" Height="20px">
-                                                <ComboBoxItem IsSelected="true">Red</ComboBoxItem>
-                                                <ComboBoxItem>Blue</ComboBoxItem>
+                                            <ComboBox Grid.Column="1" Width="60" Margin="5, 0" Height="20" SelectedValuePath="Content" SelectedValue="{Binding Alliance}">
+                                                <ComboBoxItem IsSelected="true">RED</ComboBoxItem>
+                                                <ComboBoxItem>BLUE</ComboBoxItem>
                                             </ComboBox>
-                                            <TextBox Grid.Column="2" Width="25" Margin="1, 0, 5, 0" Height="20px"/>
+                                            <TextBox Grid.Column="2" Width="25" Margin="1, 0, 5, 0" Height="20" Text="{Binding Number}"/>
                                             <Label Grid.Column="3" Content="Team" />
-                                            <TextBox Grid.Column="4" Margin="5, 0" Height="20px"/>
+                                            <TextBox Grid.Column="4" Margin="5, 0" Height="20px" Text="{Binding Team}"/>
+                                            <Button Grid.Column="5" Content="X" Padding="5, 0" Height="20" Command="{Binding RemoveCommand}"/>
                                         </Grid>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>

@@ -2,6 +2,7 @@
 using GFMSApp.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,7 +30,6 @@ namespace GFMSApp
         {
             InitializeComponent();
 
-            List<StationVM> stations = new();
             stations.Add(new(new(2708, Station.RED_1)));
             stations.Add(new(new(2, Station.RED_2)));
             stations.Add(new(new(3, Station.RED_3)));
@@ -45,11 +45,27 @@ namespace GFMSApp
 
         private void AddStation(object sender, RoutedEventArgs e)
         {
-            nextMatch.Add(new UpcomingStationVM());
+            nextMatch.Add(new UpcomingStationVM((obj) => nextMatch.Remove(obj)));
         }
 
         private void LoadMatch(object sender, RoutedEventArgs e)
         {
+            // TODO: This should interact with the director
+            foreach(var station in nextMatch)
+            {
+                if (station.Team == null)
+                    MessageBox.Show($"Team nuber for station {station.Station} not set");
+            }
+
+            // Clear previous match
+            stations.Clear();
+            // Load new stations
+            foreach(var station in nextMatch)
+            {
+                DriveStation ds = new(station.Team ?? 0, station.Station);
+                stations.Add(new(ds));
+                station.Team = null;
+            }
         }
     }
 }
