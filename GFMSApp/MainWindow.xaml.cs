@@ -67,5 +67,25 @@ namespace GFMSApp
                 station.Team = null;
             }
         }
+
+        private void NextMatchTeamList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(NextMatchTeamList.SelectedIndex >= 0)
+                RemoveNextMatchTeamButton.IsEnabled = true;
+            else
+                RemoveNextMatchTeamButton.IsEnabled = false;
+        }
+
+        private void RemoveStation(object sender, RoutedEventArgs e)
+        {
+            // Do nothing if nothing is selected
+            var selectedIDX = NextMatchTeamList.SelectedIndex;
+            if (selectedIDX < 0) return;
+            nextMatch.Remove((UpcomingStationVM)NextMatchTeamList.SelectedItem);
+            
+            // Keep something selected if possible
+            if(selectedIDX >= nextMatch.Count) selectedIDX = nextMatch.Count - 1;
+            if(selectedIDX >= 0) NextMatchTeamList.SelectedIndex = selectedIDX;
+        }
     }
 }
