@@ -16,7 +16,7 @@
             <RowDefinition Height="0.5*"/>
         </Grid.RowDefinitions>
         <GroupBox Grid.Column="0" Grid.Row="0" Header="Current Teams">
-            <ItemsControl Name="ActiveTeamsList">
+            <ItemsControl Name="ActiveTeamsList" d:ItemsSource="{d:SampleData}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid Margin="0">
@@ -38,6 +38,50 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+        </GroupBox>
+        <GroupBox Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Header="Next Match">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="0.5*"/>
+                    <RowDefinition Height="0.5*"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <GroupBox Header="Driver Stations" Grid.Row="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Hidden">
+                            <ItemsControl Name="NextMatchTeamList" d:ItemsSource="{d:SampleData}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Label Grid.Column="0" Content="Station:" />
+                                            <ComboBox Grid.Column="1" Width="50" Margin="5, 0" Height="20px">
+                                                <ComboBoxItem IsSelected="true">Red</ComboBoxItem>
+                                                <ComboBoxItem>Blue</ComboBoxItem>
+                                            </ComboBox>
+                                            <TextBox Grid.Column="2" Width="25" Margin="1, 0, 5, 0" Height="20px"/>
+                                            <Label Grid.Column="3" Content="Team" />
+                                            <TextBox Grid.Column="4" Margin="5, 0" Height="20px"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                        <Button Grid.Row="1" Content="Add Station" Click="AddStation"/>
+                    </Grid>
+                </GroupBox>
+                <Button Grid.Row="2" Content="Load Match" Click="LoadMatch"/>
+            </Grid>
         </GroupBox>
     </Grid>
 </Window>

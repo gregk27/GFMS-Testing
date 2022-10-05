@@ -22,6 +22,9 @@ namespace GFMSApp
     /// </summary>
     public partial class MainWindow : Window
     {
+        ObservableCollection<StationVM> stations = new();
+        ObservableCollection<UpcomingStationVM> nextMatch = new();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -36,6 +39,17 @@ namespace GFMSApp
             stations.Add(new(new(6, Station.BLUE_3)));
 
             ActiveTeamsList.ItemsSource = stations;
+
+            NextMatchTeamList.ItemsSource = nextMatch;
+        }
+
+        private void AddStation(object sender, RoutedEventArgs e)
+        {
+            nextMatch.Add(new UpcomingStationVM());
+        }
+
+        private void LoadMatch(object sender, RoutedEventArgs e)
+        {
         }
     }
 }
